@@ -3,11 +3,8 @@ image: alpine/edge
 packages:
   - go
 sources:
-  - https://git.sr.ht/~flobar/apoco
+  - https://git.sr.ht/~flobar/pcwclient
 tasks:
   - vet: |
-      cd apoco
+      cd pcwclient
       go vet ./...
-  - test: |
-      cd apoco
-      go test -cover ./...
