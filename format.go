@@ -65,7 +65,7 @@ func format(data interface{}) {
 	case *api.Book:
 		formatBook(t)
 	default:
-		log.Fatalf("error: invalid type to print: %T", t)
+		log.Fatalf("error: format: bad type: %T", t)
 	}
 }
 
