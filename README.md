@@ -1,4 +1,4 @@
-[![builds.sr.ht status](https://builds.sr.ht/~flobar/builds.sr.ht.svg)](https://builds.sr.ht/~flobar/builds.sr.ht?)
+[![builds.sr.ht status](https://builds.sr.ht/~flobar/pcwclient/commits/alpine.yml.svg)](https://builds.sr.ht/~flobar/pcwclient/commits/alpine.yml?)
 # pcwclient
 
 Command line client for [pocoweb](http://github.com/cisocrgroup/pocoweb)
