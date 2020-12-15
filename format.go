@@ -289,14 +289,17 @@ func formatBooks(books *api.Books) {
 }
 
 func formatBook(book *api.Book) {
-	var typ = "B"
-	if !book.IsBook {
-		typ = "P"
-	}
 	printf(nil, "%d %d %s %s %d %s %s %d %s %s %s\n",
 		book.BookID, book.ProjectID, book.Author, book.Title,
-		len(book.PageIDs), typ, bookStatusString(book),
+		len(book.PageIDs), bookType(book), bookStatusString(book),
 		book.Year, book.Language, book.ProfilerURL, book.Description)
+}
+
+func bookType(book *api.Book) string {
+	if book.IsBook {
+		return "P"
+	}
+	return "B"
 }
 
 func bookStatusString(book *api.Book) string {
