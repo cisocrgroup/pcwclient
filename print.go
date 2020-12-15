@@ -119,12 +119,12 @@ func getWord(c *api.Client, bid, pid, lid, wid, len int) error {
 			bid, pid, lid, wid)
 	default:
 		url = c.URL("books/%d/pages/%d/lines/%d/tokens/%d?len=%d",
-			c.Host, bid, pid, lid, wid, len)
+			bid, pid, lid, wid, len)
 
 	}
 	var token api.Token
 	if err := get(c, url, &token); err != nil {
-		return fmt.Errorf("get word: %v")
+		return fmt.Errorf("get word: %v", err)
 	}
 	format(&token)
 	return nil
