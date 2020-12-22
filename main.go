@@ -23,7 +23,7 @@ the pocoweb post-correction.
 
 In order to use the command line client, you should use the
 POCOWEB_URL and POCOWEB_AUTH environment varibales to set the url and
-the authentification token respectively or set the appropriate --url
+the authentification token respectively or use the appropriate --url
 and --auth parameters accordingly.`,
 }
 
