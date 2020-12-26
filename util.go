@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/UNO-SOFT/ulog"
 	"github.com/finkf/pcwgo/api"
 	"github.com/spf13/cobra"
 )
@@ -75,28 +74,28 @@ func getAuth() string {
 
 func get(c *api.Client, url string, out interface{}) error {
 	if opts.debug {
-		ulog.Write("get", "method", "GET", "url", url, "auth", c.Session.Auth)
+		log.Printf("GET %s url [auth=%s]", url, c.Session.Auth)
 	}
 	return c.Get(url, out)
 }
 
 func post(c *api.Client, url string, payload, out interface{}) error {
 	if opts.debug {
-		ulog.Write("post", "method", "POST", "url", url, "auth", c.Session.Auth)
+		log.Printf("POST %s url [auth=%s]", url, c.Session.Auth)
 	}
 	return c.Post(url, payload, out)
 }
 
 func delete(c *api.Client, url string, out interface{}) error {
 	if opts.debug {
-		ulog.Write("post", "method", "DELETE", "url", url, "auth", c.Session.Auth)
+		log.Printf("DELETE %s url [auth=%s]", url, c.Session.Auth)
 	}
 	return c.Delete(url, nil)
 }
 
 func downloadZIP(c *api.Client, url string, out io.Writer) error {
 	if opts.debug {
-		ulog.Write("download zip", "method", "GET", "url", url, "auth", c.Session.Auth)
+		log.Printf("download zip %s url [auth=%s]", url, c.Session.Auth)
 	}
 	req, err := http.NewRequest(http.MethodGet, url, http.NoBody)
 	if err != nil {

@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"time"
 
-	"github.com/UNO-SOFT/ulog"
 	"github.com/finkf/pcwgo/api"
 	"github.com/finkf/pcwgo/db"
 	"github.com/spf13/cobra"
@@ -55,17 +55,17 @@ func waitForJobToFinish(c *api.Client, jobID int) error {
 
 func start(c *api.Client, id int, fn func() error) error {
 	re, err := reattach(c, id)
-	ulog.Write("start", "re", re, "err", err)
+	log.Printf("start [re=%t,err=%v]", re, err)
 	if err != nil {
 		return err
 	}
 	if !re {
 		if err := fn(); err != nil {
-			ulog.Write("fn()", "err", err)
+			log.Printf("fn() [err=%v]", err)
 			return err
 		}
 	}
-	ulog.Write("waitForJobToFinish", "id", id)
+	log.Printf("waiting for job to finish [id=%s]", id)
 	return waitForJobToFinish(c, id)
 }
 
