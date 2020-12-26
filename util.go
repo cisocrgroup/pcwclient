@@ -60,42 +60,42 @@ func unescape(args ...string) []string {
 }
 
 func getURL() string {
-	if mainArgs.pocowebURL != "" {
-		return mainArgs.pocowebURL
+	if opts.pocowebURL != "" {
+		return opts.pocowebURL
 	}
 	return os.Getenv("POCOWEB_URL")
 }
 
 func getAuth() string {
-	if mainArgs.authToken != "" {
-		return mainArgs.authToken
+	if opts.authToken != "" {
+		return opts.authToken
 	}
 	return os.Getenv("POCOWEB_AUTH")
 }
 
 func get(c *api.Client, url string, out interface{}) error {
-	if mainArgs.debug {
+	if opts.debug {
 		ulog.Write("get", "method", "GET", "url", url, "auth", c.Session.Auth)
 	}
 	return c.Get(url, out)
 }
 
 func post(c *api.Client, url string, payload, out interface{}) error {
-	if mainArgs.debug {
+	if opts.debug {
 		ulog.Write("post", "method", "POST", "url", url, "auth", c.Session.Auth)
 	}
 	return c.Post(url, payload, out)
 }
 
 func delete(c *api.Client, url string, out interface{}) error {
-	if mainArgs.debug {
+	if opts.debug {
 		ulog.Write("post", "method", "DELETE", "url", url, "auth", c.Session.Auth)
 	}
 	return c.Delete(url, nil)
 }
 
 func downloadZIP(c *api.Client, url string, out io.Writer) error {
-	if mainArgs.debug {
+	if opts.debug {
 		ulog.Write("download zip", "method", "GET", "url", url, "auth", c.Session.Auth)
 	}
 	req, err := http.NewRequest(http.MethodGet, url, http.NoBody)

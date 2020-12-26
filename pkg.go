@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	pkgSplitCommand.Flags().BoolVarP(&pkgSplitArgs.random, "random", "r",
+	pkgSplitCommand.Flags().BoolVarP(&opts.pkg.split.random, "random", "r",
 		false, "create random packages")
 }
 
@@ -38,7 +38,7 @@ func doAssign(_ *cobra.Command, args []string) error {
 		}
 		ids = append(ids, id)
 	}
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	var err error
 	switch len(ids) {
 	case 2:
@@ -67,16 +67,12 @@ func doReassign(cmd *cobra.Command, args []string) error {
 	if n := parseIDs(args[0], &pid); n != 1 {
 		return fmt.Errorf("cannot reassign: invalid id: %s", args[0])
 	}
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	if err := get(c, c.URL("pkg/takeback/books/%d", pid), nil); err != nil {
 		return fmt.Errorf("cannot reassign package %d: %v", pid, err)
 	}
 	return nil
 }
-
-var pkgSplitArgs = struct {
-	random bool
-}{}
 
 var pkgSplitCommand = cobra.Command{
 	Use:   "split ID USERID [USERID...]",
@@ -94,7 +90,7 @@ and the third by user 3.`,
 }
 
 func doSplit(cmd *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	var ids []int
 	for _, arg := range args {
 		id, err := strconv.Atoi(arg)
@@ -106,7 +102,7 @@ func doSplit(cmd *cobra.Command, args []string) error {
 	url := c.URL("pkg/split/books/%d", ids[0])
 	err := post(c, url, api.SplitRequest{
 		UserIDs: ids[1:],
-		Random:  pkgSplitArgs.random,
+		Random:  opts.pkg.split.random,
 	}, nil)
 	if err != nil {
 		return fmt.Errorf("cannot split %d: %v", ids[0], err)

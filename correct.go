@@ -11,15 +11,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var correctArgs = struct {
-	typ   string
-	stdin bool
-}{}
-
 func init() {
-	correctCommand.Flags().StringVarP(&correctArgs.typ, "type", "t",
+	correctCommand.Flags().StringVarP(&opts.correct.typ, "type", "t",
 		"automatic", "set correction type")
-	correctCommand.Flags().BoolVarP(&correctArgs.stdin, "stdin", "i",
+	correctCommand.Flags().BoolVarP(&opts.correct.stdin, "stdin", "i",
 		false, "read IDs and corrections from stdin")
 }
 
@@ -31,12 +26,12 @@ var correctCommand = cobra.Command{
 }
 
 func doCorrect(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
-	if !correctArgs.stdin {
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	if !opts.correct.stdin {
 		for i := 1; i < len(args); i += 2 {
 			id := args[i-1]
 			cor := args[i]
-			if err := correct(c, id, cor, correctArgs.typ); err != nil {
+			if err := correct(c, id, cor, opts.correct.typ); err != nil {
 				return fmt.Errorf("cannot correct: %v", err)
 			}
 		}
@@ -51,7 +46,7 @@ func doCorrect(_ *cobra.Command, args []string) error {
 		}
 		id := line[:pos]
 		cor := line[pos+1:]
-		if err := correct(c, id, correctArgs.typ, cor); err != nil {
+		if err := correct(c, id, opts.correct.typ, cor); err != nil {
 			return fmt.Errorf("cannot correct: %v", err)
 		}
 	}

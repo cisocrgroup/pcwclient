@@ -3,20 +3,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// various command line flags
-var mainArgs = struct {
-	debug, skipVerify     bool
-	authToken, pocowebURL string
-}{}
-
 var mainCommand = &cobra.Command{
 	Use:   "pcwclient",
 	Short: "Command line client for pocoweb",
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		// if mainArgs.debug {
-		// 	log.SetLevel(log.DebugLevel)
-		// }
-	},
 	Long: `
 Command line client for pocoweb. You can use it to automate or test
 the pocoweb post-correction.
@@ -64,17 +53,17 @@ func init() {
 
 	mainCommand.SilenceUsage = true
 	mainCommand.SilenceErrors = true
-	mainCommand.PersistentFlags().BoolVarP(&formatArgs.json, "json", "J", false,
+	mainCommand.PersistentFlags().BoolVarP(&opts.format.json, "json", "J", false,
 		"output raw json")
-	mainCommand.PersistentFlags().BoolVarP(&mainArgs.skipVerify,
+	mainCommand.PersistentFlags().BoolVarP(&opts.skipVerify,
 		"skip-verify", "S", false, "ignore invalid ssl certificates")
-	mainCommand.PersistentFlags().BoolVarP(&mainArgs.debug, "debug", "D", false,
+	mainCommand.PersistentFlags().BoolVarP(&opts.debug, "debug", "D", false,
 		"enable debug output")
-	mainCommand.PersistentFlags().StringVarP(&mainArgs.pocowebURL, "url", "U",
+	mainCommand.PersistentFlags().StringVarP(&opts.pocowebURL, "url", "U",
 		getURL(), "set pocoweb url")
-	mainCommand.PersistentFlags().StringVarP(&formatArgs.template, "format", "F",
+	mainCommand.PersistentFlags().StringVarP(&opts.format.template, "format", "F",
 		"", "set output format")
-	mainCommand.PersistentFlags().StringVarP(&mainArgs.authToken, "auth", "A",
+	mainCommand.PersistentFlags().StringVarP(&opts.authToken, "auth", "A",
 		getAuth(), "set auth token")
 }
 

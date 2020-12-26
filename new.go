@@ -18,32 +18,32 @@ import (
 )
 
 func init() {
-	newBookCommand.Flags().StringVarP(&newBookArgs.author, "author", "a", "",
+	newBookCommand.Flags().StringVarP(&opts.new.book.author, "author", "a", "",
 		"set book's author (required)")
-	newBookCommand.Flags().StringVarP(&newBookArgs.title, "title", "t", "",
+	newBookCommand.Flags().StringVarP(&opts.new.book.title, "title", "t", "",
 		"set book's title (required)")
-	newBookCommand.Flags().StringVarP(&newBookArgs.description,
+	newBookCommand.Flags().StringVarP(&opts.new.book.description,
 		"description", "d", "", "set book's description")
-	newBookCommand.Flags().StringVarP(&newBookArgs.language, "language", "l", "",
+	newBookCommand.Flags().StringVarP(&opts.new.book.language, "language", "l", "",
 		"set book's language")
-	newBookCommand.Flags().StringVarP(&newBookArgs.profilerURL, "profilerurl", "u",
+	newBookCommand.Flags().StringVarP(&opts.new.book.profilerURL, "profilerurl", "u",
 		"local", "set book's profiler url")
-	newBookCommand.Flags().IntVarP(&newBookArgs.year, "year", "y", 1900,
+	newBookCommand.Flags().IntVarP(&opts.new.book.year, "year", "y", 1900,
 		"set book's year")
-	newBookCommand.Flags().StringVarP(&newBookArgs.histPatterns, "patters", "p", "",
+	newBookCommand.Flags().StringVarP(&opts.new.book.histPatterns, "patters", "p", "",
 		"set additional historical patterns for the book")
 	_ = cobra.MarkFlagRequired(newBookCommand.Flags(), "author")
 	_ = cobra.MarkFlagRequired(newBookCommand.Flags(), "title")
 	_ = cobra.MarkFlagRequired(newBookCommand.Flags(), "language")
-	newUserCommand.Flags().StringVarP(&newUserArgs.name, "name", "n", "",
+	newUserCommand.Flags().StringVarP(&opts.new.user.name, "name", "n", "",
 		"set the user's name (required)")
-	newUserCommand.Flags().StringVarP(&newUserArgs.email, "email", "e", "",
+	newUserCommand.Flags().StringVarP(&opts.new.user.email, "email", "e", "",
 		"set the user's name (required)")
-	newUserCommand.Flags().StringVarP(&newUserArgs.password, "password", "p",
+	newUserCommand.Flags().StringVarP(&opts.new.user.password, "password", "p",
 		"", "set the user's password (required)")
-	newUserCommand.Flags().StringVarP(&newUserArgs.institute, "institute",
+	newUserCommand.Flags().StringVarP(&opts.new.user.institute, "institute",
 		"i", "", "set the user's institute")
-	newUserCommand.Flags().BoolVarP(&newUserArgs.admin, "admin", "a", false,
+	newUserCommand.Flags().BoolVarP(&opts.new.user.admin, "admin", "a", false,
 		"user has administrator permissions")
 	_ = cobra.MarkFlagRequired(newUserCommand.Flags(), "name")
 	_ = cobra.MarkFlagRequired(newUserCommand.Flags(), "email")
@@ -63,13 +63,6 @@ var newBookCommand = cobra.Command{
 }
 
 var newBookArgs = struct {
-	author       string
-	title        string
-	description  string
-	language     string
-	profilerURL  string
-	histPatterns string
-	year         int
 }{}
 
 func newBook(_ *cobra.Command, args []string) error {
@@ -78,7 +71,7 @@ func newBook(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("cannot create new book: open %s: %v", args[0], err)
 	}
 	defer zip.Close()
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	url := newBookURL(c)
 	req, err := http.NewRequest(http.MethodPost, url, zip)
 	if err != nil {
@@ -156,19 +149,14 @@ func openAsZIP(p string) (io.ReadCloser, error) {
 func newBookURL(c *api.Client) string {
 	return c.URL("books?author=%s&title=%s&language=%s"+
 		"&description=%s&histPatterns=%s&profilerUrl=%s&year=%d",
-		url.QueryEscape(newBookArgs.author),
-		url.QueryEscape(newBookArgs.title),
-		url.QueryEscape(newBookArgs.language),
-		url.QueryEscape(newBookArgs.description),
-		url.QueryEscape(newBookArgs.histPatterns),
-		url.QueryEscape(newBookArgs.profilerURL),
-		newBookArgs.year)
+		url.QueryEscape(opts.new.book.author),
+		url.QueryEscape(opts.new.book.title),
+		url.QueryEscape(opts.new.book.language),
+		url.QueryEscape(opts.new.book.description),
+		url.QueryEscape(opts.new.book.histPatterns),
+		url.QueryEscape(opts.new.book.profilerURL),
+		opts.new.book.year)
 }
-
-var newUserArgs = struct {
-	email, password, institute, name string
-	admin                            bool
-}{}
 
 var newUserCommand = cobra.Command{
 	Use:   "user",
@@ -177,22 +165,22 @@ var newUserCommand = cobra.Command{
 }
 
 func newUser(cmd *cobra.Command, args []string) error {
-	if newUserArgs.email == "" || newUserArgs.password == "" {
+	if opts.new.user.email == "" || opts.new.user.password == "" {
 		return fmt.Errorf("missing user email and/or password")
 	}
 	var newUser api.User
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	err := post(c, c.URL("users"), api.CreateUserRequest{
 		User: api.User{
-			Name:      newUserArgs.name,
-			Email:     newUserArgs.email,
-			Institute: newUserArgs.institute,
-			Admin:     newUserArgs.admin,
+			Name:      opts.new.user.name,
+			Email:     opts.new.user.email,
+			Institute: opts.new.user.institute,
+			Admin:     opts.new.user.admin,
 		},
-		Password: newUserArgs.password,
+		Password: opts.new.user.password,
 	}, &newUser)
 	if err != nil {
-		return fmt.Errorf("cannot create user %s: %v", newUserArgs.email, err)
+		return fmt.Errorf("cannot create user %s: %v", opts.new.user.email, err)
 	}
 	format(&newUser)
 	return nil

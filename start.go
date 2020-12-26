@@ -10,25 +10,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var startArgs = struct {
-	nowait bool
-	sleep  int
-}{}
-
 var startCommand = cobra.Command{
 	Use:   "start",
 	Short: "Start various jobs",
 }
 
 func init() {
-	startCommand.PersistentFlags().BoolVarP(&startArgs.nowait, "nowait", "n", false,
+	startCommand.PersistentFlags().BoolVarP(&opts.start.nowait, "nowait", "n", false,
 		"do not wait for the job to finish")
-	startCommand.PersistentFlags().IntVarP(&startArgs.sleep, "sleep", "s", 5,
+	startCommand.PersistentFlags().IntVarP(&opts.start.sleep, "sleep", "s", 5,
 		"set the number of seconds to sleep between checks if the job has finished")
 }
 
 func reattach(c *api.Client, jobID int) (bool, error) {
-	if !startArgs.nowait {
+	if !opts.start.nowait {
 		var status api.JobStatus
 		if err := get(c, c.URL("jobs/%d", jobID), &status); err != nil {
 			return false, fmt.Errorf("reattach to job %d: %v",
@@ -42,7 +37,7 @@ func reattach(c *api.Client, jobID int) (bool, error) {
 }
 
 func waitForJobToFinish(c *api.Client, jobID int) error {
-	for !startArgs.nowait {
+	for !opts.start.nowait {
 		var status api.JobStatus
 		if err := get(c, c.URL("jobs/%d", jobID), &status); err != nil {
 			return fmt.Errorf("get job status: %v", err)
@@ -53,7 +48,7 @@ func waitForJobToFinish(c *api.Client, jobID int) error {
 		if status.StatusID == db.StatusIDDone {
 			return nil
 		}
-		time.Sleep(time.Duration(startArgs.sleep) * time.Second)
+		time.Sleep(time.Duration(opts.start.sleep) * time.Second)
 	}
 	return nil
 }
@@ -86,7 +81,7 @@ func doProfile(_ *cobra.Command, args []string) error {
 	if n := parseIDs(args[0], &bid); n != 1 {
 		return fmt.Errorf("start profile: invalid book ID: %q", args[0])
 	}
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	jobID := bid
 	err := start(c, jobID, func() error {
 		var job api.Job
@@ -111,7 +106,7 @@ func doEL(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("start el: invalid book ID: %q",
 			args[0])
 	}
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	jobID := bid
 	err := start(c, jobID, func() error {
 		var job api.Job
@@ -136,7 +131,7 @@ func doRRDM(_ *cobra.Command, args []string) error {
 	if n := parseIDs(args[0], &bid); n != 1 {
 		return fmt.Errorf("start rrdm: invalid book ID: %q", args[0])
 	}
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	jobID := bid
 	err := start(c, jobID, func() error {
 		var job api.Job

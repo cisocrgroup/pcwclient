@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	downloadPoolCommand.Flags().BoolVarP(&downloadPoolArgs.global,
+	downloadPoolCommand.Flags().BoolVarP(&opts.download.pool.global,
 		"global", "g", false, "dowload the global pool")
 }
 
@@ -44,7 +44,7 @@ func downloadBook(out io.Writer, id string) error {
 	if n := parseIDs(id, &bid); n != 1 {
 		return fmt.Errorf("download book: invalid book id: %s", id)
 	}
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	var ar struct {
 		Archive string `json:"archive"`
 	}
@@ -57,10 +57,6 @@ func downloadBook(out io.Writer, id string) error {
 	}
 	return nil
 }
-
-var downloadPoolArgs = struct {
-	global bool
-}{}
 
 var downloadPoolCommand = cobra.Command{
 	Use:   "pool [FILE]",
@@ -82,9 +78,9 @@ func doDownloadPool(_ *cobra.Command, args []string) error {
 }
 
 func downloadPool(out io.Writer) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	url := c.URL("pool")
-	if !downloadPoolArgs.global {
+	if !opts.download.pool.global {
 		url += "/user"
 	}
 	if err := downloadZIP(c, url, out); err != nil {

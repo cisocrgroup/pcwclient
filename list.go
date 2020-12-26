@@ -37,7 +37,7 @@ given, information about all users is listed.`,
 }
 
 func doListUsers(cmd *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	if len(args) == 0 {
 		return listAllUsers(c)
 	}
@@ -79,7 +79,7 @@ and/or packages is listed.`,
 }
 
 func doListBooks(cmd *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	if len(args) == 0 {
 		return listAllBooks(c)
 	}
@@ -118,7 +118,7 @@ var listPatternsCommand = cobra.Command{
 }
 
 func doListPatterns(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	var bid int
 	if n := parseIDs(args[0], &bid); n != 1 {
 		return fmt.Errorf("list patterns: invalid book id: %q", args[0])
@@ -153,7 +153,7 @@ var listSuggestionsCommand = cobra.Command{
 }
 
 func doListSuggestions(cmd *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	var bid int
 	if n := parseIDs(args[0], &bid); n != 1 {
 		return fmt.Errorf("list suggestions: invalid book id: %q", args[0])
@@ -199,7 +199,7 @@ var listSuspiciousCommand = cobra.Command{
 }
 
 func doListSuspicious(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	for i := range args {
 		var bid int
 		if n := parseIDs(args[i], &bid); n != 1 {
@@ -223,7 +223,7 @@ var listAdaptiveCommand = cobra.Command{
 }
 
 func doListAdaptive(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	for i := range args {
 		var bid int
 		if n := parseIDs(args[i], &bid); n != 1 {
@@ -246,7 +246,7 @@ var listELCommand = cobra.Command{
 }
 
 func doListEL(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	for i := range args {
 		var bid int
 		if n := parseIDs(args[i], &bid); n != 1 {
@@ -269,7 +269,7 @@ var listRRDMCommand = cobra.Command{
 }
 
 func doListRRDM(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	for i := range args {
 		var bid int
 		if n := parseIDs(args[i], &bid); n != 1 {
@@ -293,7 +293,7 @@ var listCharsCommand = cobra.Command{
 }
 
 func doListChars(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	for i := range args {
 		var bid int
 		if n := parseIDs(args[i], &bid); n != 1 {

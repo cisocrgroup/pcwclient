@@ -23,14 +23,14 @@ func runLogin(cmd *cobra.Command, args []string) error {
 }
 
 func login(user, password string) error {
-	// if mainArgs.debug {
+	// if args.debug {
 	// 	log.SetLevel(log.DebugLevel)
 	// }
 	url := getURL()
 	if url == "" {
 		return fmt.Errorf("login: missing url: use --url or POCOWEB_URL")
 	}
-	c, err := api.Login(url, user, password, mainArgs.skipVerify)
+	c, err := api.Login(url, user, password, opts.skipVerify)
 	if err != nil {
 		return fmt.Errorf("login: %v", err)
 	}
@@ -39,7 +39,7 @@ func login(user, password string) error {
 }
 
 func getLogin() error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	var session api.Session
 	if err := get(c, c.URL("login"), &session); err != nil {
 		return fmt.Errorf("get login: %v", err)
@@ -56,7 +56,7 @@ var logoutCommand = cobra.Command{
 }
 
 func runLogout(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
 	if err := get(c, c.URL("login"), nil); err != nil {
 		return fmt.Errorf("logout: %v", err)
 	}

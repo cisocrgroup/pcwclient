@@ -9,31 +9,23 @@ import (
 )
 
 func init() {
-	searchCommand.Flags().StringVarP(&searchArgs.typ, "type", "t",
+	searchCommand.Flags().StringVarP(&opts.search.typ, "type", "t",
 		"token", "set search type (token|pattern|ac|regex)")
-	searchCommand.Flags().BoolVarP(&formatArgs.ocr, "ocr", "o", false,
+	searchCommand.Flags().BoolVarP(&opts.format.ocr, "ocr", "o", false,
 		"print ocr lines")
-	searchCommand.Flags().BoolVarP(&formatArgs.noCor, "nocor", "c", false,
+	searchCommand.Flags().BoolVarP(&opts.format.noCor, "nocor", "c", false,
 		"do not print corrected lines")
-	searchCommand.Flags().BoolVarP(&formatArgs.words, "words", "w",
+	searchCommand.Flags().BoolVarP(&opts.format.words, "words", "w",
 		false, "print out matched words")
-	searchCommand.Flags().BoolVarP(&searchArgs.all, "all", "a",
+	searchCommand.Flags().BoolVarP(&opts.search.all, "all", "a",
 		false, "search for all matches")
-	searchCommand.Flags().BoolVarP(&searchArgs.ic, "ignore-case", "i",
+	searchCommand.Flags().BoolVarP(&opts.search.ic, "ignore-case", "i",
 		false, "ignore case for search")
-	searchCommand.Flags().IntVarP(&searchArgs.max, "max", "m",
+	searchCommand.Flags().IntVarP(&opts.search.max, "max", "m",
 		50, "set max matches")
-	searchCommand.Flags().IntVarP(&searchArgs.skip, "skip", "s",
+	searchCommand.Flags().IntVarP(&opts.search.skip, "skip", "s",
 		0, "set skip matches")
 }
-
-var searchArgs = struct {
-	skip int
-	max  int
-	typ  string
-	all  bool
-	ic   bool
-}{}
 
 var searchCommand = cobra.Command{
 	Use:   "search ID [QUERIES...]",
@@ -60,12 +52,12 @@ func hasAnyMatches(res *api.SearchResults) bool {
 }
 
 func search(id int, qs ...string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
-	skip := searchArgs.skip
+	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	skip := opts.search.skip
 	for {
 		uri := c.URL("books/%d/search?i=%t&max=%d&skip=%d&type=%s",
-			id, searchArgs.ic, searchArgs.max, skip,
-			url.QueryEscape(searchArgs.typ))
+			id, opts.search.ic, opts.search.max, skip,
+			url.QueryEscape(opts.search.typ))
 		for _, q := range qs {
 			uri += "&q=" + url.QueryEscape(q)
 		}
@@ -77,10 +69,10 @@ func search(id int, qs ...string) error {
 			break
 		}
 		format(&results)
-		if !searchArgs.all {
+		if !opts.search.all {
 			break
 		}
-		skip += searchArgs.max
+		skip += opts.search.max
 	}
 	return nil
 }
