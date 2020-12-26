@@ -65,7 +65,7 @@ func start(c *api.Client, id int, fn func() error) error {
 			return err
 		}
 	}
-	log.Printf("waiting for job to finish [id=%s]", id)
+	log.Printf("waiting for job to finish [id=%d]", id)
 	return waitForJobToFinish(c, id)
 }
 

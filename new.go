@@ -117,12 +117,12 @@ func openAsZIP(p string) (io.ReadCloser, error) {
 			internalPath += "/"
 			header.Name = internalPath
 			_, e := w.CreateHeader(header)
-			log.Printf("filepath walk %s [internal=%s,prefix=%s]",
+			log.Printf("filepath walk %s [internal=%s,prefix=%d]",
 				p, internalPath, prefix)
 			return e
 		}
 		// copy file
-		log.Printf("filepath walk %s [internal=%s,prefix=%s]",
+		log.Printf("filepath walk %s [internal=%s,prefix=%d]",
 			p, internalPath, prefix)
 		header.Method = zip.Deflate
 		// open file
