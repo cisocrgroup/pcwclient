@@ -29,7 +29,7 @@ var printCommand = cobra.Command{
 }
 
 func printIDs(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	for _, id := range args {
 		if err := doPrintID(c, id); err != nil {
 			return err

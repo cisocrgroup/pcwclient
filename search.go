@@ -52,7 +52,7 @@ func hasAnyMatches(res *api.SearchResults) bool {
 }
 
 func search(id int, qs ...string) error {
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	skip := opts.search.skip
 	for {
 		uri := c.URL("books/%d/search?i=%t&max=%d&skip=%d&type=%s",

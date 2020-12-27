@@ -39,7 +39,7 @@ func login(user, password string) error {
 }
 
 func getLogin() error {
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	var session api.Session
 	if err := get(c, c.URL("login"), &session); err != nil {
 		return fmt.Errorf("get login: %v", err)
@@ -56,7 +56,7 @@ var logoutCommand = cobra.Command{
 }
 
 func runLogout(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	if err := get(c, c.URL("login"), nil); err != nil {
 		return fmt.Errorf("logout: %v", err)
 	}

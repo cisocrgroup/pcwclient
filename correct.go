@@ -26,7 +26,7 @@ var correctCommand = cobra.Command{
 }
 
 func doCorrect(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	if !opts.correct.stdin {
 		for i := 1; i < len(args); i += 2 {
 			id := args[i-1]

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/finkf/pcwgo/api"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +19,7 @@ var deleteBooksCommand = cobra.Command{
 }
 
 func deleteBooks(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	for _, id := range args {
 		var bid, pid, lid int
 		var url string
@@ -49,7 +48,7 @@ var deleteUsersCommand = cobra.Command{
 }
 
 func deleteUsers(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	for _, id := range args {
 		var uid int
 		if n := parseIDs(id, &uid); n != 1 {

@@ -71,7 +71,7 @@ func newBook(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("cannot create new book: open %s: %v", args[0], err)
 	}
 	defer zip.Close()
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	url := newBookURL(c)
 	req, err := http.NewRequest(http.MethodPost, url, zip)
 	if err != nil {
@@ -169,7 +169,7 @@ func newUser(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("missing user email and/or password")
 	}
 	var newUser api.User
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	err := post(c, c.URL("users"), api.CreateUserRequest{
 		User: api.User{
 			Name:      opts.new.user.name,

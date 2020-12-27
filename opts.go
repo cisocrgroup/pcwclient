@@ -1,5 +1,7 @@
 package main
 
+// opts holds the global command line arguments for the different
+// (sub) commands.
 var opts = struct {
 	debug      bool
 	skipVerify bool

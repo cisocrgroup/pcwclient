@@ -6,7 +6,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/finkf/pcwgo/api"
 	"github.com/spf13/cobra"
 )
 
@@ -44,7 +43,7 @@ func downloadBook(out io.Writer, id string) error {
 	if n := parseIDs(id, &bid); n != 1 {
 		return fmt.Errorf("download book: invalid book id: %s", id)
 	}
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	var ar struct {
 		Archive string `json:"archive"`
 	}
@@ -78,7 +77,7 @@ func doDownloadPool(_ *cobra.Command, args []string) error {
 }
 
 func downloadPool(out io.Writer) error {
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	url := c.URL("pool")
 	if !opts.download.pool.global {
 		url += "/user"

@@ -81,7 +81,7 @@ func doProfile(_ *cobra.Command, args []string) error {
 	if n := parseIDs(args[0], &bid); n != 1 {
 		return fmt.Errorf("start profile: invalid book ID: %q", args[0])
 	}
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	jobID := bid
 	err := start(c, jobID, func() error {
 		var job api.Job
@@ -106,7 +106,7 @@ func doEL(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("start el: invalid book ID: %q",
 			args[0])
 	}
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	jobID := bid
 	err := start(c, jobID, func() error {
 		var job api.Job
@@ -131,7 +131,7 @@ func doRRDM(_ *cobra.Command, args []string) error {
 	if n := parseIDs(args[0], &bid); n != 1 {
 		return fmt.Errorf("start rrdm: invalid book ID: %q", args[0])
 	}
-	c := api.Authenticate(getURL(), getAuth(), opts.skipVerify)
+	c := authenticate()
 	jobID := bid
 	err := start(c, jobID, func() error {
 		var job api.Job

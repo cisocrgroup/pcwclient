@@ -72,31 +72,36 @@ func getAuth() string {
 	return os.Getenv("POCOWEB_AUTH")
 }
 
-func get(c *api.Client, url string, out interface{}) error {
+func debugf(format string, args ...interface{}) {
 	if opts.debug {
-		log.Printf("GET %s url [auth=%s]", url, c.Session.Auth)
+		log.Printf(format, args...)
 	}
+}
+
+func authenticate() *api.Client {
+	url := getURL()
+	auth := getAuth()
+	debugf("authenticating [url=%s,auth=%s", url, auth)
+	return api.Authenticate(url, auth, opts.skipVerify)
+}
+
+func get(c *api.Client, url string, out interface{}) error {
+	debugf("GET %s url [auth=%s]", url, c.Session.Auth)
 	return c.Get(url, out)
 }
 
 func post(c *api.Client, url string, payload, out interface{}) error {
-	if opts.debug {
-		log.Printf("POST %s url [auth=%s]", url, c.Session.Auth)
-	}
+	debugf("POST %s url [auth=%s]", url, c.Session.Auth)
 	return c.Post(url, payload, out)
 }
 
 func delete(c *api.Client, url string, out interface{}) error {
-	if opts.debug {
-		log.Printf("DELETE %s url [auth=%s]", url, c.Session.Auth)
-	}
+	debugf("DELETE %s url [auth=%s]", url, c.Session.Auth)
 	return c.Delete(url, nil)
 }
 
 func downloadZIP(c *api.Client, url string, out io.Writer) error {
-	if opts.debug {
-		log.Printf("download zip %s url [auth=%s]", url, c.Session.Auth)
-	}
+	debugf("download zip %s url [auth=%s]", url, c.Session.Auth)
 	req, err := http.NewRequest(http.MethodGet, url, http.NoBody)
 	if err != nil {
 		return err
