@@ -12,13 +12,13 @@ import (
 )
 
 func init() {
-	printCommand.Flags().BoolVarP(&formatArgs.words, "words", "w", false,
+	printCommand.Flags().BoolVarP(&opts.format.words, "words", "w", false,
 		"print words not lines")
-	printCommand.Flags().BoolVarP(&formatArgs.ocr, "ocr", "o", false,
+	printCommand.Flags().BoolVarP(&opts.format.ocr, "ocr", "o", false,
 		"print ocr lines")
-	printCommand.Flags().BoolVarP(&formatArgs.noCor, "nocor", "c", false,
+	printCommand.Flags().BoolVarP(&opts.format.noCor, "nocor", "c", false,
 		"do not print corrected lines")
-	printCommand.Flags().BoolVarP(&formatArgs.onlyManual, "manual", "m", false,
+	printCommand.Flags().BoolVarP(&opts.format.onlyManual, "manual", "m", false,
 		"only print manual corrected lines/words")
 }
 
@@ -29,7 +29,7 @@ var printCommand = cobra.Command{
 }
 
 func printIDs(_ *cobra.Command, args []string) error {
-	c := api.Authenticate(getURL(), getAuth(), mainArgs.skipVerify)
+	c := authenticate()
 	for _, id := range args {
 		if err := doPrintID(c, id); err != nil {
 			return err

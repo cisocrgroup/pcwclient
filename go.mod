@@ -1,7 +1,7 @@
 module github.com/finkf/pcwclient
 
 require (
-	github.com/UNO-SOFT/ulog v1.1.7
+	github.com/UNO-SOFT/ulog v1.1.7 // indirect
 	github.com/fatih/color v1.10.0
 	github.com/finkf/gofiler v0.3.0
 	github.com/finkf/pcwgo v0.10.0

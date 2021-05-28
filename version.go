@@ -19,7 +19,7 @@ func runVersion(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("missing url: use --url, or set POCOWEBC_URL")
 	}
 	var version api.Version
-	c := api.NewClient(url, mainArgs.skipVerify)
+	c := api.NewClient(url, opts.skipVerify)
 	if err := get(c, c.URL("api-version"), &version); err != nil {
 		return fmt.Errorf("get api version: %v", err)
 	}

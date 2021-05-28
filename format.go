@@ -14,15 +14,6 @@ import (
 	"github.com/finkf/pcwgo/api"
 )
 
-var formatArgs = struct {
-	template   string
-	words      bool
-	ocr        bool
-	noCor      bool
-	onlyManual bool
-	json       bool
-}{}
-
 func format(data interface{}) {
 	if formatMaybeSpecial(data) {
 		return
@@ -117,14 +108,14 @@ func formatPage(page *api.Page) {
 }
 
 func formatLine(line *api.Line) {
-	if formatArgs.onlyManual && !line.IsManuallyCorrected {
+	if opts.format.onlyManual && !line.IsManuallyCorrected {
 		return
 	}
-	if formatArgs.words {
+	if opts.format.words {
 		formatLineWords(line)
 		return
 	}
-	if !formatArgs.noCor {
+	if !opts.format.noCor {
 		printf(nil, "%d:%d:%d", line.ProjectID, line.PageID, line.LineID)
 		for _, w := range line.Tokens {
 			printf(nil, " ")
@@ -132,7 +123,7 @@ func formatLine(line *api.Line) {
 		}
 		printf(nil, "\n")
 	}
-	if formatArgs.ocr {
+	if opts.format.ocr {
 		printf(nil, "%d:%d:%d", line.ProjectID, line.PageID, line.LineID)
 		for _, w := range line.Tokens {
 			printf(nil, " ")
@@ -143,7 +134,7 @@ func formatLine(line *api.Line) {
 }
 
 func formatLineWords(line *api.Line) {
-	if formatArgs.onlyManual && !line.IsManuallyCorrected {
+	if opts.format.onlyManual && !line.IsManuallyCorrected {
 		return
 	}
 	for _, w := range line.Tokens {
@@ -152,15 +143,15 @@ func formatLineWords(line *api.Line) {
 }
 
 func formatWord(w *api.Token) {
-	if formatArgs.onlyManual && !w.IsManuallyCorrected {
+	if opts.format.onlyManual && !w.IsManuallyCorrected {
 		return
 	}
-	if !formatArgs.noCor {
+	if !opts.format.noCor {
 		printf(nil, "%d:%d:%d:%d ", w.ProjectID, w.PageID, w.LineID, w.TokenID)
 		printf(colorForToken(w), w.Cor)
 		printf(nil, "\n")
 	}
-	if formatArgs.ocr {
+	if opts.format.ocr {
 		printf(nil, "%d:%d:%d:%d ", w.ProjectID, w.PageID, w.LineID, w.TokenID)
 		printf(nil, w.Cor)
 		printf(nil, "\n")
@@ -184,7 +175,7 @@ func formatPostCorrection(pcs *api.PostCorrection) {
 func formatSearchResults(res *api.SearchResults) {
 	for _, m := range res.Matches {
 		for _, line := range m.Lines {
-			if formatArgs.words {
+			if opts.format.words {
 				for _, w := range line.Tokens {
 					// Skip not matched tokens
 					if !w.IsMatch {
@@ -327,7 +318,7 @@ func formatMaybeSpecial(data interface{}) bool {
 }
 
 func formatMaybeJSON(data interface{}) bool {
-	if !formatArgs.json {
+	if !opts.format.json {
 		return false
 	}
 	chk(json.NewEncoder(os.Stdout).Encode(data))
@@ -335,11 +326,11 @@ func formatMaybeJSON(data interface{}) bool {
 }
 
 func formatMaybeTemplate(data interface{}) bool {
-	if formatArgs.template == "" {
+	if opts.format.template == "" {
 		return false
 	}
 	t, err := template.New("pocwebc").
-		Parse(strings.Replace(formatArgs.template, "\\n", "\n", -1))
+		Parse(strings.Replace(opts.format.template, "\\n", "\n", -1))
 	chk(err)
 	err = t.Execute(os.Stdout, data)
 	chk(err)
