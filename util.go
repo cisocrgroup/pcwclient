@@ -81,27 +81,27 @@ func debugf(format string, args ...interface{}) {
 func authenticate() *api.Client {
 	url := getURL()
 	auth := getAuth()
-	debugf("authenticating [url=%s,auth=%s", url, auth)
+	debugf("authenticating [url=%s,auth=%s]", url, auth)
 	return api.Authenticate(url, auth, opts.skipVerify)
 }
 
 func get(c *api.Client, url string, out interface{}) error {
-	debugf("GET %s url [auth=%s]", url, c.Session.Auth)
+	debugf("GET %s [auth=%s]", url, c.Session.Auth)
 	return c.Get(url, out)
 }
 
 func post(c *api.Client, url string, payload, out interface{}) error {
-	debugf("POST %s url [auth=%s]", url, c.Session.Auth)
+	debugf("POST %s [auth=%s]", url, c.Session.Auth)
 	return c.Post(url, payload, out)
 }
 
 func delete(c *api.Client, url string, out interface{}) error {
-	debugf("DELETE %s url [auth=%s]", url, c.Session.Auth)
+	debugf("DELETE %s [auth=%s]", url, c.Session.Auth)
 	return c.Delete(url, nil)
 }
 
 func downloadZIP(c *api.Client, url string, out io.Writer) error {
-	debugf("download zip %s url [auth=%s]", url, c.Session.Auth)
+	debugf("download zip %s [auth=%s]", url, c.Session.Auth)
 	req, err := http.NewRequest(http.MethodGet, url, http.NoBody)
 	if err != nil {
 		return err

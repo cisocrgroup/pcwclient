@@ -9,7 +9,7 @@ import (
 
 var loginCommand = cobra.Command{
 	Use:   "login [EMAIL PASSWORD]",
-	Short: "login to pocoweb or get logged in user",
+	Short: "login to pocoweb or query logged in user",
 	RunE:  runLogin,
 	Args:  exactArgs(0, 2),
 }
