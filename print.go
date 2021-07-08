@@ -102,7 +102,7 @@ func getPage(c *api.Client, bid, pid, mod int) (int, int, error) {
 }
 
 func getLine(c *api.Client, bid, pid, lid int) error {
-	url := fmt.Sprintf("%s/books/%d/pages/%d/lines/%d", c.Host, bid, pid, lid)
+	url := c.URL("books/%d/pages/%d/lines/%d", bid, pid, lid)
 	var line api.Line
 	if err := get(c, url, &line); err != nil {
 		return fmt.Errorf("get line: %v", err)
