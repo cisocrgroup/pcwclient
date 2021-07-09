@@ -31,7 +31,7 @@ func doCorrect(_ *cobra.Command, args []string) error {
 		for i := 1; i < len(args); i += 2 {
 			id := args[i-1]
 			cor := args[i]
-			if err := correct(c, id, cor, opts.correct.typ); err != nil {
+			if err := correct(c, id, opts.correct.typ, cor); err != nil {
 				return fmt.Errorf("cannot correct: %v", err)
 			}
 		}
