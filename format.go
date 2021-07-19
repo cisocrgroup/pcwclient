@@ -77,7 +77,7 @@ func printf(col *color.Color, format string, args ...interface{}) {
 
 func s(str string) string {
 	if str == "" {
-		return "ϵ"
+		return "\u03B5"
 	}
 	return strings.ReplaceAll(str, " ", "_")
 }
