@@ -62,9 +62,6 @@ var newBookCommand = cobra.Command{
 	Args:  cobra.ExactArgs(1),
 }
 
-var newBookArgs = struct {
-}{}
-
 func newBook(_ *cobra.Command, args []string) error {
 	zip, err := openAsZIP(args[0])
 	if err != nil {
