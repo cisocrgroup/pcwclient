@@ -51,6 +51,7 @@ func downloadBook(out io.Writer, id string) error {
 		return fmt.Errorf("download book: %v", err)
 	}
 	url := strings.TrimRight(c.Host, "/") + "/" + strings.TrimLeft(ar.Archive, "/")
+	url = strings.Replace(url, "/rest", "", 1)
 	if err := downloadZIP(c, url, out); err != nil {
 		return fmt.Errorf("download book: %v", err)
 	}
