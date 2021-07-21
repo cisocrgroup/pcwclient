@@ -288,9 +288,9 @@ func formatBook(book *api.Book) {
 
 func bookType(book *api.Book) string {
 	if book.IsBook {
-		return "P"
+		return "prj"
 	}
-	return "B"
+	return "pkg"
 }
 
 func bookStatusString(book *api.Book) string {
