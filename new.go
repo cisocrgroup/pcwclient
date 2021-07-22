@@ -25,7 +25,7 @@ func init() {
 	newBookCommand.Flags().StringVarP(&opts.new.book.description,
 		"description", "d", "", "set book's description")
 	newBookCommand.Flags().StringVarP(&opts.new.book.language, "language", "l", "",
-		"set book's language")
+		"set book's language (required)")
 	newBookCommand.Flags().StringVarP(&opts.new.book.profilerURL, "profilerurl", "u",
 		"local", "set book's profiler url")
 	newBookCommand.Flags().IntVarP(&opts.new.book.year, "year", "y", 1900,
