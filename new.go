@@ -134,9 +134,6 @@ func openAsZIP(p string) (io.ReadCloser, error) {
 		return e
 	})
 	w.Close()
-	if err := ioutil.WriteFile("/tmp/pocowebc.zip", buf.Bytes(), 0666); err != nil {
-		return nil, err
-	}
 	return ioutil.NopCloser(&buf), err
 }
 
