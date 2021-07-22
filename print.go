@@ -70,11 +70,11 @@ func doPrintID(c *api.Client, id string) error {
 func getPages(c *api.Client, bid int) error {
 	pageid := 0
 	for {
-		next, _, err := getPage(c, bid, pageid, 0)
+		next, prev, err := getPage(c, bid, pageid, 0)
 		if err != nil {
 			return fmt.Errorf("get pages: %v", err)
 		}
-		if next == pageid {
+		if prev == next || next == pageid {
 			break
 		}
 		pageid = next
