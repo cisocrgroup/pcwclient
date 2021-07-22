@@ -6,12 +6,11 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
-	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/finkf/pcwgo/api"
 	"github.com/spf13/cobra"
@@ -97,10 +96,7 @@ func openAsZIP(p string) (io.ReadCloser, error) {
 	}
 	var buf bytes.Buffer
 	w := zip.NewWriter(&buf)
-	prefix := len(path.Dir(p))
-	if prefix > 0 { // increment prefix to include the slash if non empty prefix
-		prefix++
-	}
+	pre := filepath.Base(p)
 	err = filepath.Walk(p, func(p string, fi os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -109,19 +105,20 @@ func openAsZIP(p string) (io.ReadCloser, error) {
 		if e != nil {
 			return e
 		}
-		internalPath := p[prefix:]
+		pos := strings.Index(p, pre)
+		if pos == -1 {
+			return fmt.Errorf("missing prefix in %q", p)
+		}
+		internalPath := filepath.Join(pre, p[pos+len(pre)+1:])
 		if fi.IsDir() {
 			internalPath += "/"
 			header.Name = internalPath
 			_, e := w.CreateHeader(header)
-			log.Printf("filepath walk %s [internal=%s,prefix=%d]",
-				p, internalPath, prefix)
 			return e
 		}
 		// copy file
-		log.Printf("filepath walk %s [internal=%s,prefix=%d]",
-			p, internalPath, prefix)
 		header.Method = zip.Deflate
+		header.Name = internalPath
 		// open file
 		in, e := os.Open(p)
 		if e != nil {
