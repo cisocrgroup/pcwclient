@@ -82,6 +82,8 @@ func downloadPool(out io.Writer) error {
 	url := c.URL("pool")
 	if !opts.download.pool.global {
 		url += "/user"
+	} else {
+		url += "/global"
 	}
 	if err := downloadZIP(c, url, out); err != nil {
 		return fmt.Errorf("download pool: %v", err)

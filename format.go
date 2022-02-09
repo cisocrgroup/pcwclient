@@ -295,14 +295,14 @@ func bookType(book *api.Book) string {
 
 func bookStatusString(book *api.Book) string {
 	res := []byte("---")
-	if book.Status["profiled"] {
-		res[0] = 'p'
-	}
-	if book.Status["extended-lexicon"] {
-		res[1] = 'e'
-	}
 	if book.Status["post-corrected"] {
-		res[2] = 'c'
+		res[0] = 'c'
+	}
+	if book.Pooled {
+		res[1] = 'g'
+	}
+	if book.Status["profiled"] {
+		res[2] = 'p'
 	}
 	return string(res)
 }
